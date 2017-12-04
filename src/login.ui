@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Login</class>
+ <widget class="QMainWindow" name="Login">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>491</width>
+    <height>447</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Login</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QStackedWidget" name="stackedWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>490</width>
+      <height>360</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+      <horstretch>1</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="palette">
+     <palette>
+      <active>
+       <colorrole role="Base">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>255</green>
+          <blue>255</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="Window">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>145</red>
+          <green>145</green>
+          <blue>145</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </active>
+      <inactive>
+       <colorrole role="Base">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>255</green>
+          <blue>255</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="Window">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>145</red>
+          <green>145</green>
+          <blue>145</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </inactive>
+      <disabled>
+       <colorrole role="Base">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>145</red>
+          <green>145</green>
+          <blue>145</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="Window">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>145</red>
+          <green>145</green>
+          <blue>145</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </disabled>
+     </palette>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="viewfinderPage">
+     <layout class="QGridLayout" name="gridLayout_5">
+      <item row="0" column="0">
+       <widget class="QCameraViewfinder" name="viewfinder" native="true"/>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="previewPage">
+     <layout class="QGridLayout" name="gridLayout_4">
+      <item row="0" column="0">
+       <widget class="QLabel" name="lastImagePreviewLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::Box</enum>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="loginButton">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>360</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>登录</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="registerButton">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>360</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>注册</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="usernameLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>360</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="placeholderText">
+     <string>用户名</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="takeImageButton">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>360</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>拍照</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="cancelButton">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>360</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>取消</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>491</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionStartCamera"/>
+    <addaction name="actionStopCamera"/>
+    <addaction name="separator"/>
+    <addaction name="actionSettings"/>
+   </widget>
+   <widget class="QMenu" name="menuDevices">
+    <property name="title">
+     <string>Devices</string>
+    </property>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuDevices"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionStartCamera">
+   <property name="text">
+    <string>Start Camera</string>
+   </property>
+  </action>
+  <action name="actionStopCamera">
+   <property name="text">
+    <string>Stop Camera</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QCameraViewfinder</class>
+   <extends>QWidget</extends>
+   <header>qcameraviewfinder.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
