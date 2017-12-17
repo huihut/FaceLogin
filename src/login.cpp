@@ -1,5 +1,7 @@
 ﻿#include "login.h"
 #include "ui_login.h"
+#include "train.h"
+#include "recognize.h"
 
 #include <QCameraViewfinder>
 #include <QCameraInfo>
@@ -15,6 +17,7 @@ Login::Login(QWidget *parent) :
     ui->setupUi(this);
 
     loginState = loggingin;
+    // Button
     ui->takeImageButton->setVisible(false);
     ui->cancelButton->setVisible(false);
     ui->usernameLineEdit->setVisible(false);
@@ -32,6 +35,7 @@ Login::Login(QWidget *parent) :
 
         ui->menuDevices->addAction(videoDeviceAction);
     }
+    connect(videoDevicesGroup, &QActionGroup::triggered, this, &Login::updateCameraDevice);
     // Camera
     connect(ui->actionStartCamera, &QAction::triggered, this, &Login::startCamera);
     connect(ui->actionStopCamera, &QAction::triggered, this, &Login::stopCamera);
@@ -41,10 +45,7 @@ Login::Login(QWidget *parent) :
     // Register
     connect(ui->takeImageButton, &QPushButton::clicked, this, &Login::takeImageButtonClick);
     connect(ui->cancelButton, &QPushButton::clicked, this, &Login::cancelButtonClick);
-
-
-    connect(videoDevicesGroup, &QActionGroup::triggered, this, &Login::updateCameraDevice);
-
+    // setCamera
     setCamera(QCameraInfo::defaultCamera());
 }
 
@@ -63,21 +64,19 @@ void Login::setCamera(const QCameraInfo &cameraInfo)
     delete camera;
 
     camera = new QCamera(cameraInfo);
-
-    connect(camera, &QCamera::stateChanged, this, &Login::updateCameraState);
-    connect(camera, QOverload<QCamera::Error>::of(&QCamera::error), this, &Login::displayCameraError);
-
     imageCapture = new QCameraImageCapture(camera);
 
-    camera->setViewfinder(ui->viewfinder);
-
-    updateCameraState(camera->state());
-
+    // camera
+    connect(camera, &QCamera::stateChanged, this, &Login::updateCameraState);
+    connect(camera, QOverload<QCamera::Error>::of(&QCamera::error), this, &Login::displayCameraError);
+    // imageCapture
     connect(imageCapture, &QCameraImageCapture::readyForCaptureChanged, this, &Login::readyForCapture);
     connect(imageCapture, &QCameraImageCapture::imageCaptured, this, &Login::processCapturedImage);
     connect(imageCapture, &QCameraImageCapture::imageSaved, this, &Login::imageSaved);
     connect(imageCapture, QOverload<int, QCameraImageCapture::Error, const QString &>::of(&QCameraImageCapture::error), this, &Login::displayCaptureError);
-
+    // camera
+    camera->setViewfinder(ui->viewfinder);
+    updateCameraState(camera->state());
     camera->start();
 }
 
@@ -148,6 +147,8 @@ void Login::processCapturedImage(int requestId, const QImage& img)
     // Display capture image for 3 seconds.
     displayCapturedImage();
     QTimer::singleShot(3000, this, &Login::displayViewfinder);
+
+//    cv::Mat f = QImage2cvMat(scaledImage);
 }
 
 void Login::displayViewfinder()
@@ -195,16 +196,42 @@ void Login::registerButtonClick()
 
 void Login::takeImageButtonClick()
 {
-
+    Recognize *recognizer = new Recognize();
+    recognizer->start();
 }
 
 void Login::cancelButtonClick()
 {
     loginState = loggingin;
-
     ui->takeImageButton->setVisible(false);
     ui->cancelButton->setVisible(false);
     ui->usernameLineEdit->setVisible(false);
     ui->loginButton->setVisible(true);
     ui->registerButton->setVisible(true);
+}
+
+/***********************************
+    Register
+***********************************/
+
+cv::Mat Login::QImage2cvMat(QImage image)
+{
+    cv::Mat mat;
+    qDebug() << image.format();
+    switch(image.format())
+    {
+    case QImage::Format_ARGB32:
+    case QImage::Format_RGB32:
+    case QImage::Format_ARGB32_Premultiplied:
+        mat = cv::Mat(image.height(), image.width(), CV_8UC4, (void*)image.constBits(), image.bytesPerLine());
+        break;
+    case QImage::Format_RGB888:
+        mat = cv::Mat(image.height(), image.width(), CV_8UC3, (void*)image.constBits(), image.bytesPerLine());
+        cv::cvtColor(mat, mat, CV_BGR2RGB);
+        break;
+    case QImage::Format_Indexed8:
+        mat = cv::Mat(image.height(), image.width(), CV_8UC1, (void*)image.constBits(), image.bytesPerLine());
+        break;
+    }
+    return mat;
 }

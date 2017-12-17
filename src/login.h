@@ -4,6 +4,7 @@
 #include <iostream>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 #include <QCamera>
 #include <QCameraImageCapture>
@@ -25,11 +26,10 @@ public:
     ~Login();
 
 private slots:
-    void setCamera(const QCameraInfo &cameraInfo);
-
     // Camera
     void startCamera();
     void stopCamera();
+    void setCamera(const QCameraInfo &cameraInfo);
     void updateCameraState(QCamera::State state);
     void updateCameraDevice(QAction *action);
     void displayCameraError();
@@ -48,6 +48,9 @@ private slots:
     void registerButtonClick();
     void takeImageButtonClick();
     void cancelButtonClick();
+
+    // etc
+    cv::Mat QImage2cvMat(QImage image);
 
 private:
     Ui::Login *ui;

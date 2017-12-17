@@ -9,32 +9,33 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        login.cpp
+        login.cpp \
+    train.cpp \
+    recognize.cpp
 
 HEADERS += \
-        login.h
+        login.h \
+    train.h \
+    recognize.h
 
 FORMS += \
         login.ui
 
 win32 {
-
 INCLUDEPATH += E:\OpenCV_3.3.1\opencv-build\install\include
-
 LIBS += -LE:\OpenCV_3.3.1\opencv-build\install\x86\mingw\bin \
     -llibopencv_core331 \
     -llibopencv_highgui331 \
-    -llibopencv_imgcodecs331 \
-    -llibopencv_imgproc331 \
-    -llibopencv_features2d331 \
-    -llibopencv_calib3d331
-
+    -llibopencv_imgproc331 #\
+#    -llibopencv_imgcodecs331 \
+#    -llibopencv_features2d331 \
+#    -llibopencv_calib3d331
 }
-
-macx {
-
-}
-
-unix:!macx{
-
+unix {
+INCLUDEPATH +=/usr/local/include
+LIBS +=-L/usr/local/lib \
+    -lopencv_core \
+    -lopencv_highgui \
+    -lopencv_imgproc #\
+#    -lopencv_imgcodecs
 }
