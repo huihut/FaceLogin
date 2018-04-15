@@ -1,7 +1,8 @@
 # FaceLogin
+
 Face Login using OpenCV and Qt.
 
-## Deploy
+## 部署
 
 ### OpenCV
 
@@ -22,3 +23,13 @@ brew install pkg-config
 pkg-config --libs opencv
 pkg-config --cflags opencv
 ```
+
+在 `src/src.pro` 中配置好 OpenCV 路径
+
+## 数据集
+
+[The AT&T Facedatabase](http://www.cl.cam.ac.uk/research/dtg/attarchive/facedatabase.html)
+
+## 分类器
+
+[lbpcascade_frontalface.xml](https://github.com/opencv/opencv/blob/master/data/lbpcascades/lbpcascade_frontalface.xml)
