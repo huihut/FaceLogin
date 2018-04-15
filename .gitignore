@@ -1,3 +1,4 @@
-Facelogin.pro.user
-data
-etc
+FaceLogin.pro.user
+data/
+etc/
+release/
