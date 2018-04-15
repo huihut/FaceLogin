@@ -61,19 +61,17 @@ private slots:
     void readyForRegisterCapture(bool ready);
     void processRegisterCapturedImage(int requestId, QString str);
     void registerTakeImageButtonClick();
-    void registerImageSaved(int id, const QString &fileName);
+    void registerImageSaved();
     void displayRegisterCaptureError(int id, const QCameraImageCapture::Error error, const QString &errorString);
     void registerCancelButtonClick();
 
 private:
     enum LoginState
     {
-        loggingin,
-        loginSuccess,
-        loginFail,
-        registering,
-        registerSucess,
-        registerFail
+        loggingin,          // 登录中
+        loginSuccess,       // 登录成功
+        registering,        // 注册中
+        registerSucess      // 注册成功
     } loginState;
 
     Ui::FaceLogin *ui;
@@ -82,11 +80,12 @@ private:
     QCameraImageCapture *loginImageCapture, *registerImageCapture;
     QAction *videoDeviceAction;
     QActionGroup *videoDevicesGroup;
-    QString registerUserName;
-    bool isLoginCapturingImage, isRegisterCapturingImage;
-    bool applicationExiting;
-    const unsigned int entryTimes; // 录入人脸数据次数（录入时拍多少张照）
-    unsigned int entryTimesNow;    // 当前录入人脸数据次数
+    QString registerUserName;       // 注册的用户名
+    QString userImagePath;          // 用户注册时拍摄照片的存储路径
+    bool applicationExiting;        // 应用退出
+    bool canRecognition;            // 拍摄的照片是否可以识别出一个人脸
+    const unsigned int entryTimes;  // 录入人脸数据次数（录入时拍多少张照）
+    unsigned int entryTimesNow;     // 当前录入人脸数据次数
 };
 
 #endif // LOGIN_H

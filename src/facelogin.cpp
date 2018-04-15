@@ -9,9 +9,8 @@ FaceLogin::FaceLogin(QWidget *parent) :
     camera(nullptr),
     loginImageCapture(nullptr),
     registerImageCapture(nullptr),
-    isLoginCapturingImage(false),
-    isRegisterCapturingImage(false),
     applicationExiting(false),
+    canRecognition(false),
     entryTimes(ENTRY_TIMES),  // 录入人脸拍照次数
     entryTimesNow(0)
 {
@@ -93,10 +92,10 @@ void FaceLogin::setCamera(const QCameraInfo &cameraInfo)
     // registerImageCapture
     connect(registerImageCapture, &QCameraImageCapture::readyForCaptureChanged, this, &FaceLogin::readyForRegisterCapture);
     connect(registerImageCapture, &QCameraImageCapture::imageSaved, this, &FaceLogin::processRegisterCapturedImage);
+    connect(registerImageCapture, &QCameraImageCapture::imageSaved, this, &FaceLogin::registerImageSaved);
     connect(registerImageCapture, QOverload<int, QCameraImageCapture::Error, const QString &>::of(&QCameraImageCapture::error), this, &FaceLogin::displayRegisterCaptureError);
 //    connect(registerImageCapture, &QCameraImageCapture::imageAvailable, this, &FaceLogin::registerReceiveCaptureFrames);
 //    connect(registerImageCapture, &QCameraImageCapture::imageCaptured, this, &FaceLogin::processRegisterCapturedImage);
-//    connect(registerImageCapture, &QCameraImageCapture::imageSaved, this, &FaceLogin::registerImageSaved);
 
     // camera
     camera->setViewfinder(ui->viewfinder);
@@ -138,67 +137,72 @@ void FaceLogin::updateCameraDevice(QAction *action)
 
 void FaceLogin::displayCameraError()
 {
-    QMessageBox::warning(this, tr("Camera Error"), camera->errorString());
+    QMessageBox::warning(this, tr("摄像头出错！"), camera->errorString());
 }
 
 /***********************************
-    Login 登录 Register 注册
+    Viewfinder 拍照预览
 ***********************************/
 
-void FaceLogin::displayViewfinder()
-{
-    ui->stackedWidget->setCurrentIndex(0);
-}
-
+// 登录、注册的拍照是照片在 Viewfinder 预览
 void FaceLogin::displayCapturedImage()
 {
     ui->stackedWidget->setCurrentIndex(1);
+}
+
+// Viewfinder 预览后回到拍摄状态
+void FaceLogin::displayViewfinder()
+{
+    ui->stackedWidget->setCurrentIndex(0);
 }
 
 /***********************************
     Login 登录
 ***********************************/
 
+// 拍照登录
 void FaceLogin::loginTakeImageButtonClick()
 {
-    isLoginCapturingImage = true;
     loginImageCapture->capture();
 }
 
+// 准备拍照
 void FaceLogin::readyForLoginCapture(bool ready)
 {
     ui->loginButton->setEnabled(ready);
 }
 
+// 处理登录拍的照片
 void FaceLogin::processLoginCapturedImage(int requestId, const QImage& img)
 {
     Q_UNUSED(requestId);
     QImage scaledImage = img.scaled(ui->viewfinder->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
     ui->lastImagePreviewLabel->setPixmap(QPixmap::fromImage(scaledImage));
 
-    // Display capture image for 3 seconds.
+    // 拍的照在 Viewfinder 显示 3 秒
     displayCapturedImage();
     QTimer::singleShot(3000, this, &FaceLogin::displayViewfinder);
 }
 
+// 保存登录照片
 void FaceLogin::loginImageSaved(int id, const QString &fileName)
 {
     Q_UNUSED(id);
-    ui->statusBar->showMessage(tr("Captured \"%1\"").arg(QDir::toNativeSeparators(fileName)));
+    ui->statusBar->showMessage(tr("保存在 \"%1\"").arg(QDir::toNativeSeparators(fileName)));
 
-    isLoginCapturingImage = false;
     if(applicationExiting)
         close();
 }
 
+// 登录错误
 void FaceLogin::displayLoginCaptureError(int id, const QCameraImageCapture::Error error, const QString &errorString)
 {
     Q_UNUSED(id);
     Q_UNUSED(error);
-    QMessageBox::warning(this, tr("Image Capture Error"), errorString);
-    isLoginCapturingImage = false;
+    QMessageBox::warning(this, tr("拍照出错！"), errorString);
 }
 
+// 注册按钮
 void FaceLogin::registerButtonClick()
 {
     loginState = registering;
@@ -207,7 +211,7 @@ void FaceLogin::registerButtonClick()
     ui->takeImageButton->setVisible(true);
     ui->cancelButton->setVisible(true);
     ui->usernameLineEdit->setVisible(true);
-    ui->statusBar->showMessage(tr("请拍照 %1 次！").arg(entryTimes));
+    ui->statusBar->showMessage(tr("请拍照 %1 次！").arg(entryTimes - entryTimesNow));
 }
 
 /***********************************
@@ -216,83 +220,103 @@ void FaceLogin::registerButtonClick()
 
 void FaceLogin::registerTakeImageButtonClick()
 {
-    if(registerUserName.isEmpty())
-    {
-        QString userName = ui->usernameLineEdit->text();
-        if(userName.isEmpty())
-        {
-            ui->statusBar->showMessage(tr("用户名不能为空！"));
-            return;
-        }
-        registerUserName = userName;
-    }
-    if(entryTimesNow >=  entryTimes)
+    // 拍照次数达到 entryTimes 则完成
+    if(entryTimesNow >= entryTimes)
     {
         ui->statusBar->showMessage(tr("图片录入完成！"));
-        entryTimesNow = 0;
-        registerUserName.clear();
         registerCancelButtonClick();
         return;
     }
 
-    isLoginCapturingImage = true;
+    // 只第一次拍照的时候获取注册用户名，之后的拍照都保存在此用户中
+    if(entryTimesNow == 0)
+    {
+        // 保证用户名不为空，并获取用户名
+        if(registerUserName.isEmpty())
+        {
+            QString userName = ui->usernameLineEdit->text();
+            if(userName.isEmpty())
+            {
+                ui->statusBar->showMessage(tr("用户名不能为空！"));
+                return;
+            }
+            registerUserName = userName;
+        }
+    }
 
+    // 拍照
     loginImageCapture->capture();
 
-    ui->statusBar->showMessage(tr("请拍照 %1 次！").arg(entryTimes-entryTimesNow));
+    // 状态栏提示
+    ui->statusBar->showMessage(tr("请拍照 %1 次！").arg(entryTimes - entryTimesNow));
 }
 
+// 准备拍照
 void FaceLogin::readyForRegisterCapture(bool ready)
 {
     ui->loginButton->setEnabled(ready);
 }
 
-// 处理录入的照片：拍的照在 Viewfinder 显示 3 秒，切割图片成数据集大小
+// 处理录入的照片：拍的照在 Viewfinder 显示 2 秒，切割图片成数据集大小
 void FaceLogin::processRegisterCapturedImage(int id, QString str)
 {
     Q_UNUSED(id);
+    // 加载在系统默认路径下保存的拍摄的照片
     QImage registerImage(str);
-    ui->lastImagePreviewLabel->setPixmap(QPixmap::fromImage(registerImage));
+    // 获取 PreviewLabel 宽高
+    int imgWidth = ui->lastImagePreviewLabel->width();
+    int imgHeight = ui->lastImagePreviewLabel->height();
+    // 让宽高适应 PreviewLabel，按比例缩放
+    ui->lastImagePreviewLabel->setPixmap(QPixmap::fromImage(registerImage.scaled(imgWidth, imgHeight, Qt::KeepAspectRatio, Qt::SmoothTransformation)));
 
     // 切割图片成数据集大小并保存
     ImageProcessing ip;
-    switch (ip.ImageCutAndSave(registerImage, id)) {
-    case 0:
+
+    // ImageCutAndSave 中传入 id 为了保证拍摄照片唯一性（不覆盖），可以使用 entryTimesNow，让拍摄照片名字逐个递增，但可能覆盖原来的照片。
+    switch (ip.ImageCutAndSave(registerImage, registerUserName, id, userImagePath)) {
+    case 0:     // 检测到的人脸数量为：0
+        canRecognition = false;
         ui->statusBar->showMessage(tr("无法检测到人脸！"));
         break;
-    case 1:
+    case 1:     // 检测到的人脸数量为：1
         ++entryTimesNow;
-        // 拍的照在 Viewfinder 显示 3 秒
+        canRecognition = true;
+        // 拍的照在 Viewfinder 显示 2 秒
         displayCapturedImage();
-        QTimer::singleShot(3000, this, &FaceLogin::displayViewfinder);
+        QTimer::singleShot(2000, this, &FaceLogin::displayViewfinder);
         break;
-    default:
-        ui->statusBar->showMessage(tr("请只拍摄一个人！"));
+    default:     // 检测到的人脸数量大于等于2
+        canRecognition = false;
+        ui->statusBar->showMessage(tr("请只拍一个人！"));
         break;
     }
 }
 
-void FaceLogin::registerImageSaved(int id, const QString &fileName)
+// 保存图片后显示状态栏信息
+void FaceLogin::registerImageSaved()
 {
-    Q_UNUSED(id);
-    ui->statusBar->showMessage(tr("Captured \"%1\"").arg(QDir::toNativeSeparators(fileName)));
+    if(canRecognition)
+        ui->statusBar->showMessage(tr("【%1】保存在 \"%2\"").arg(entryTimesNow).arg(QDir::toNativeSeparators(userImagePath)));
 
-    isRegisterCapturingImage = false;
     if(applicationExiting)
         close();
 }
 
+// 注册错误
 void FaceLogin::displayRegisterCaptureError(int id, const QCameraImageCapture::Error error, const QString &errorString)
 {
     Q_UNUSED(id);
     Q_UNUSED(error);
-    QMessageBox::warning(this, tr("Image Capture Error"), errorString);
-    isRegisterCapturingImage = false;
+    QMessageBox::warning(this, tr("拍照出错！"), errorString);
 }
 
+// 取消注册按钮
 void FaceLogin::registerCancelButtonClick()
 {
     loginState = loggingin;
+    entryTimesNow = 0;
+    registerUserName.clear();
+    userImagePath.clear();
     ui->takeImageButton->setVisible(false);
     ui->cancelButton->setVisible(false);
     ui->usernameLineEdit->setVisible(false);

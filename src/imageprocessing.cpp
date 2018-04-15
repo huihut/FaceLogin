@@ -3,7 +3,8 @@
 ImageProcessing::ImageProcessing() :
     faceWidth(FACE_WIDTH),
     faceHeight(FACE_HEIGHT),
-    lbpcascade_frontalface(LBP_FF)
+    lbpcascade_frontalface(LBP_FF),
+    newUserName(NEWUSER)
 {
 
 }
@@ -26,12 +27,16 @@ cv::Mat ImageProcessing::QImage2cvMat(QImage image)
     case QImage::Format_Indexed8:
         mat = cv::Mat(image.height(), image.width(), CV_8UC1, (void*)image.constBits(), image.bytesPerLine());
         break;
+    default:
+        break;
     }
     return mat;
 }
 
-// 返回值为检测到几个人脸
-int ImageProcessing::ImageCutAndSave(QImage qimg, int id)
+// 图片切割和保存；
+// 传入：图片、用户名、图片名id、保存路径的引用；
+// 返回：检测到几个人脸；
+int ImageProcessing::ImageCutAndSave(QImage qimg, QString userName, int id, QString &imgPath)
 {
     std::vector<cv::Rect> faces;
     Mat img_gray;
@@ -51,20 +56,20 @@ int ImageProcessing::ImageCutAndSave(QImage qimg, int id)
     QDir faceDir(rootDir);
     faceDir.cd(DATA);
 
-    // 创建并进入s41文件夹
-    bool exist = faceDir.exists(NEWUSER);
-    if(!exist)
-    {
-        faceDir.mkdir(NEWUSER);
-    }
-    faceDir.cd(NEWUSER);
+    if(!userName.isEmpty())
+        newUserName = userName;
+
+    // 创建并进入userName文件夹
+    if(!faceDir.exists(newUserName))
+        faceDir.mkdir(newUserName);
+    faceDir.cd(newUserName);
 
     // 加载分类器
     CascadeClassifier face_cascade;
     face_cascade.load(classifierDir.absolutePath().toStdString() + "/" + lbpcascade_frontalface);
 
     // 检测人脸
-    face_cascade.detectMultiScale(img_gray, faces, 1.1, 3, CV_HAAR_DO_ROUGH_SEARCH);
+    face_cascade.detectMultiScale(img_gray, faces, 1.1, 3, CV_HAAR_DO_ROUGH_SEARCH, Size(100, 100));
 
     if(faces.size() == 1)
     {
@@ -72,9 +77,11 @@ int ImageProcessing::ImageCutAndSave(QImage qimg, int id)
         Mat userFace;
         if (faceROI.cols > 100)
         {
-            resize(faceROI, userFace, Size(faceWidth, faceHeight));
+            // 切割，重置大小
+            resize(faceROI, userFace, Size(faceWidth, faceHeight), 0, 0);
             std::string str(faceDir.absolutePath().toStdString() + "/" + std::to_string(id) + "." + IMG_FORMAT);
             imwrite(str, userFace);
+            imgPath = QString::fromStdString(str);
         }
     }
 
