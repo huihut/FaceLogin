@@ -264,7 +264,7 @@ void FaceLogin::processRegisterCapturedImage(int id, QString str)
         ++entryTimesNow;
         // 拍的照在 Viewfinder 显示 3 秒
         displayCapturedImage();
-        QTimer::singleShot(5000, this, &FaceLogin::displayViewfinder);
+        QTimer::singleShot(3000, this, &FaceLogin::displayViewfinder);
         break;
     default:
         ui->statusBar->showMessage(tr("请只拍摄一个人！"));
