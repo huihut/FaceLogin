@@ -1,6 +1,6 @@
 # FaceLogin
 
-使用 OpenCV 和 Qt 实现人脸登录
+使用 OpenCV 和 Qt 实现人脸（刷脸）登录
 
 日常消遣开发中 _\(:з」∠)\_
 
