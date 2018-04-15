@@ -24,7 +24,7 @@ pkg-config --libs opencv
 pkg-config --cflags opencv
 ```
 
-在 `src/src.pro` 中配置好 OpenCV 路径
+在 `src/src.pro` 中配置好 OpenCV 路径
 
 ## 数据集
 
