@@ -1,10 +1,18 @@
 # FaceLogin
 
-Face Login using OpenCV and Qt.
+使用 OpenCV 和 Qt 实现人脸登录
+
+日常消遣开发中 _\(:з」∠)\_
 
 ## 部署
 
-### OpenCV
+### 克隆 FaceLogin
+
+```
+git clone git@github.com:huihut/FaceLogin.git
+```
+
+### 配置 OpenCV
 
 #### MacOS
 
@@ -24,11 +32,36 @@ pkg-config --libs opencv
 pkg-config --cflags opencv
 ```
 
-在 `src/src.pro` 中配置好 OpenCV 路径
+在 `FaceLogin/src/src.pro` 中配置好 OpenCV 路径
+
+### 下载数据集
+
+下载 [AT&T Facedatabase](http://www.cl.cam.ac.uk/research/dtg/attarchive/facedatabase.html) 数据集，保存在与 `src` 文件夹同级目录的 `data` 文件夹中，如下文件树。
+
+
+## 文件树
+
+```
+.
+└── FaceLogin
+    ├── FaceLogin.pro
+    ├── README.md
+    ├── data
+    │   ├── README
+    │   ├── s1
+    │   │   ├── 1.pgm
+    │   │   └── ...
+    │   └── ...
+    ├── release
+    └── src
+        ├── ...
+        ├── src.pro
+        └── ...
+```
 
 ## 数据集
 
-[The AT&T Facedatabase](http://www.cl.cam.ac.uk/research/dtg/attarchive/facedatabase.html)
+[AT&T Facedatabase](http://www.cl.cam.ac.uk/research/dtg/attarchive/facedatabase.html)
 
 ## 分类器
 
