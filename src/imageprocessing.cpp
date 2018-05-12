@@ -1,4 +1,4 @@
-#include "imageprocessing.h"
+﻿#include "imageprocessing.h"
 
 ImageProcessing::ImageProcessing() :
     faceWidth(FACE_WIDTH),
@@ -9,6 +9,9 @@ ImageProcessing::ImageProcessing() :
 
 }
 
+// 图片格式转换：把Qt中QImage转换为OpenCV中Mat
+// 传入：QImage
+// 返回：Mat
 cv::Mat ImageProcessing::QImage2cvMat(QImage image)
 {
     cv::Mat mat;
@@ -80,7 +83,7 @@ int ImageProcessing::ImageCutAndSave(QImage qimg, QString userName, int id, QStr
             // 切割，重置大小
             resize(faceROI, userFace, Size(faceWidth, faceHeight), 0, 0);
             std::string str(faceDir.absolutePath().toStdString() + "/" + std::to_string(id) + "." + IMG_FORMAT);
-            imwrite(str, userFace);
+            cv::imwrite(str, userFace);
             imgPath = QString::fromStdString(str);
         }
     }
