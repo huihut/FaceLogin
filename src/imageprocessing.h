@@ -7,7 +7,8 @@
 #include "dir.h"
 
 #define SRC "src"           // src 路径
-#define DATA "data"         // data 路径
+#define DATASET "dataset"   // dataset 路径
+#define MODEL "model"       // 模型路径
 #define NEWUSER "s41"       // 新用户默认名
 #define IMG_FORMAT "jpg"    // 注册存储的图片格式
 #define FACE_WIDTH 92       // 数据集的宽

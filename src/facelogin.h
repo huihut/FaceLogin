@@ -11,6 +11,7 @@
 #include <QMessageBox>
 #include <QtWidgets>
 #include <QDir>
+#include <QDebug>
 
 #include <opencv2/opencv.hpp>
 
@@ -20,6 +21,7 @@
 #include "imageprocessing.h"
 
 #define ENTRY_TIMES 10  // 录入人脸数据次数（录入时拍多少张照）
+#define CREATE_CSV "create_csv"
 
 using namespace cv;
 using namespace std;

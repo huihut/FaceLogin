@@ -225,6 +225,9 @@ void FaceLogin::registerTakeImageButtonClick()
     {
         ui->statusBar->showMessage(tr("图片录入完成！"));
         registerCancelButtonClick();
+
+        // 录入完成，生成 CSV 文件
+        Dir::GetDir().CreateCSV();
         return;
     }
 
@@ -245,7 +248,7 @@ void FaceLogin::registerTakeImageButtonClick()
     }
 
     // 拍照
-    loginImageCapture->capture();
+    registerImageCapture->capture();
 
     // 状态栏提示
     ui->statusBar->showMessage(tr("请拍照 %1 次！").arg(entryTimes - entryTimesNow));

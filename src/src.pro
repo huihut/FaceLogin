@@ -42,13 +42,14 @@ LIBS += -LE:\OpenCV_3.3.1\opencv-build\install\x86\mingw\bin \
 }
 
 macx {
+# opencv
 INCLUDEPATH += /usr/local/Cellar/opencv/2.4.13.2/include
 LIBS += -L/usr/local/Cellar/opencv/2.4.13.2/lib \
     -lopencv_core \
 #    -lopencv_features2d \
-#    -lopencv_highgui \
-#    -lopencv_imgproc \
-    -lopencv_imgcodecs \
+    -lopencv_highgui \
+    -lopencv_imgproc \
+#    -lopencv_imgcodecs \
     -lopencv_objdetect
 }
 
@@ -57,7 +58,7 @@ INCLUDEPATH += /usr/local/include
 LIBS += -L/usr/local/lib \
     -lopencv_core \
 #    -lopencv_features2d \
-#    -lopencv_highgui \
+    -lopencv_highgui \
 #    -lopencv_imgproc \
     -lopencv_imgcodecs \
     -lopencv_objdetect

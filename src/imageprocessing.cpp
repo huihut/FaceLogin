@@ -50,14 +50,11 @@ int ImageProcessing::ImageCutAndSave(QImage qimg, QString userName, int id, QStr
     // 均衡化
     cv::equalizeHist(img_gray, img_gray);
 
-    // 分类器加载路径
-    QDir rootDir = programRootDir();
-    QDir classifierDir(rootDir);
-    classifierDir.cd(SRC);
+    // 分类器加载路径 
+    QDir classifierDir(Dir::GetDir().GetModelDir());
 
     // 人脸图片保存路径
-    QDir faceDir(rootDir);
-    faceDir.cd(DATA);
+    QDir faceDir(Dir::GetDir().GetDatasetDir());
 
     if(!userName.isEmpty())
         newUserName = userName;
@@ -69,7 +66,7 @@ int ImageProcessing::ImageCutAndSave(QImage qimg, QString userName, int id, QStr
 
     // 加载分类器
     CascadeClassifier face_cascade;
-    face_cascade.load(classifierDir.absolutePath().toStdString() + "/" + lbpcascade_frontalface);
+    face_cascade.load(classifierDir.absolutePath().toStdString() + QDir::toNativeSeparators("/").toStdString() + lbpcascade_frontalface);
 
     // 检测人脸
     face_cascade.detectMultiScale(img_gray, faces, 1.1, 3, CV_HAAR_DO_ROUGH_SEARCH, Size(100, 100));
@@ -82,7 +79,7 @@ int ImageProcessing::ImageCutAndSave(QImage qimg, QString userName, int id, QStr
         {
             // 切割，重置大小
             resize(faceROI, userFace, Size(faceWidth, faceHeight), 0, 0);
-            std::string str(faceDir.absolutePath().toStdString() + "/" + std::to_string(id) + "." + IMG_FORMAT);
+            std::string str(faceDir.absolutePath().toStdString() + QDir::toNativeSeparators("/").toStdString() + std::to_string(id) + "." + IMG_FORMAT);
             cv::imwrite(str, userFace);
             imgPath = QString::fromStdString(str);
         }
