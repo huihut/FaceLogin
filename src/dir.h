@@ -25,11 +25,13 @@ private:
     QString SrcDir();
     QString DatasetDir();
     QString ModelDir();
+    QString CSVPathName();
 
     QDir programRootDir;
     QString srcDir;
     QString datasetDir;
     QString modelDir;
+    QString csvPathName;
 
 public:
     static Dir & GetDir()       // 获取文件路径类的单例方法
@@ -42,6 +44,7 @@ public:
     QString GetSrcDir();        // 获取程序 src 目录
     QString GetDatasetDir();    // 获取程序 dataset 目录
     QString GetModelDir();      // 获取程序 model 目录
+    QString GetCSVPathName();   // 获取程序 csv 文件的路径和名字（绝对路径）
 
     bool CreateCSV();           // 在 dataset 目录下生成 CSV 文件
 

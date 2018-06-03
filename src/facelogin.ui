@@ -216,8 +216,15 @@
      <string>Devices</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menutrain">
+    <property name="title">
+     <string>Train</string>
+    </property>
+    <addaction name="actionStart_Train"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuDevices"/>
+   <addaction name="menutrain"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionStartCamera">
@@ -238,6 +245,11 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionStart_Train">
+   <property name="text">
+    <string>Start Train</string>
    </property>
   </action>
  </widget>

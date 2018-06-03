@@ -10,6 +10,7 @@ FaceLogin::FaceLogin(QWidget *parent) :
     loginImageCapture(nullptr),
     registerImageCapture(nullptr),
     applicationExiting(false),
+    train(nullptr),
     canRecognition(false),
     entryTimes(ENTRY_TIMES),  // 录入人脸拍照次数
     entryTimesNow(0)
@@ -62,6 +63,7 @@ FaceLogin::~FaceLogin()
     delete loginImageCapture;
     delete registerImageCapture;
     delete camera;
+    delete train;
     delete ui;
 }
 
@@ -326,4 +328,16 @@ void FaceLogin::registerCancelButtonClick()
     ui->loginButton->setVisible(true);
     ui->registerButton->setVisible(true);
     ui->statusBar->showMessage(tr("请拍照登录！"));
+}
+
+/***********************************
+    Train 训练
+***********************************/
+
+void FaceLogin::on_actionStart_Train_triggered()
+{
+    if(!train)
+        train = new Train();
+
+    train->run();
 }

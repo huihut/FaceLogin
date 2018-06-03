@@ -6,6 +6,7 @@ Dir::Dir()
     srcDir = SrcDir();
     datasetDir = DatasetDir();
     modelDir = ModelDir();
+    csvPathName = GetDatasetDir() + QDir::toNativeSeparators("/") + CSV_FILENAME;
 }
 
 Dir::~Dir()
@@ -58,6 +59,11 @@ QString Dir::ModelDir()
     return dir.absolutePath();
 }
 
+QString Dir::CSVPathName()
+{
+    return GetDatasetDir() + QDir::toNativeSeparators("/") + CSV_FILENAME;
+}
+
 // -------- 返回文件路径 --------
 
 QDir Dir::GetProgramRootDir()
@@ -90,6 +96,13 @@ QString Dir::GetModelDir()
     return modelDir;
 }
 
+QString Dir::GetCSVPathName()
+{
+    if(csvPathName.isEmpty())
+        csvPathName = CSVPathName();
+    return csvPathName;
+}
+
 // -------- 生成 CSV 文件 --------
 
 // 在 dataset 目录下生成 CSV 文件
@@ -108,7 +121,7 @@ bool Dir::CreateCSV()
     }
 
     // 创建及打开 CSV 文件
-    QFile file(datasetdir + QDir::toNativeSeparators("/") + CSV_FILENAME);
+    QFile file(GetCSVPathName());
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         qDebug() << "Can't open CSV file!\n";
