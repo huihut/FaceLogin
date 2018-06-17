@@ -18,10 +18,8 @@ class Train : public QThread
 public:
     Train();
 
-    void read_csv(const string&, vector<Mat>&, vector<string>&, char);
-
-//protected:
     void run();
+    void read_csv(const string&, vector<Mat>&, vector<string>&, char);
 };
 
 #endif // TRAIN_H

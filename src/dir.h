@@ -18,36 +18,36 @@ class Dir
 private:
     Dir();
     ~Dir();
-    Dir(const Dir &);
-    Dir & operator = (const Dir &);
+    Dir(const Dir &) = delete;
+    Dir & operator = (const Dir &) = delete;
 
-    QDir ProgramRootDir();
-    QString SrcDir();
-    QString DatasetDir();
-    QString ModelDir();
-    QString CSVPathName();
-
-    QDir programRootDir;
-    QString srcDir;
-    QString datasetDir;
-    QString modelDir;
-    QString csvPathName;
+    QDir ProgramRootDir() const;
+    QString SrcDir() const;
+    QString DatasetDir() const;
+    QString ModelDir() const;
+    QString CSVPathName() const;
 
 public:
-    static Dir & GetDir()       // 获取文件路径类的单例方法
+    static Dir & GetDir()               // 获取文件路径类的单例方法
     {
         static Dir instanceDir;
         return instanceDir;
     }
 
-    QDir GetProgramRootDir();   // 获取程序根目录
-    QString GetSrcDir();        // 获取程序 src 目录
-    QString GetDatasetDir();    // 获取程序 dataset 目录
-    QString GetModelDir();      // 获取程序 model 目录
-    QString GetCSVPathName();   // 获取程序 csv 文件的路径和名字（绝对路径）
+    QDir GetProgramRootDir() const;     // 获取程序根目录
+    QString GetSrcDir() const;          // 获取程序 src 目录
+    QString GetDatasetDir() const;      // 获取程序 dataset 目录
+    QString GetModelDir() const;        // 获取程序 model 目录
+    QString GetCSVPathName() const;     // 获取程序 csv 文件的路径和名字（绝对路径）
 
-    bool CreateCSV();           // 在 dataset 目录下生成 CSV 文件
+    bool CreateCSV();                   // 在 dataset 目录下生成 CSV 文件
 
+private:
+    const QDir programRootDir;
+    const QString srcDir;
+    const QString datasetDir;
+    const QString modelDir;
+    const QString csvPathName;
 };
 
 

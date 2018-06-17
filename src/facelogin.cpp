@@ -9,8 +9,8 @@ FaceLogin::FaceLogin(QWidget *parent) :
     camera(nullptr),
     loginImageCapture(nullptr),
     registerImageCapture(nullptr),
-    applicationExiting(false),
     train(nullptr),
+    applicationExiting(false),
     canRecognition(false),
     entryTimes(ENTRY_TIMES),  // 录入人脸拍照次数
     entryTimesNow(0)

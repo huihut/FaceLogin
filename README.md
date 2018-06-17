@@ -10,6 +10,8 @@
 
 ```
 git clone git@github.com:huihut/FaceLogin.git
+cd FaceLogin
+unzip att_faces.zip -d ./dataset  # 数据集文件夹名必须是 dataset
 ```
 
 ### 配置 OpenCV
@@ -33,10 +35,6 @@ pkg-config --cflags opencv
 ```
 
 在 `FaceLogin/src/src.pro` 中配置好 OpenCV 的 include、lib 路径
-
-### 下载数据集
-
-下载 [AT&T Facedatabase](http://www.cl.cam.ac.uk/research/dtg/attarchive/facedatabase.html) 数据集，保存在与 `src` 文件夹同级目录的 `dataset` 文件夹中，如下文件树。
 
 
 ## 文件树
