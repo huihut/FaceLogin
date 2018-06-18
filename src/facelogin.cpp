@@ -341,3 +341,16 @@ void FaceLogin::on_actionStart_Train_triggered()
 
     train->run();
 }
+
+/***********************************
+    Dataset 数据集
+***********************************/
+
+// 在 dataset 文件夹生成 CSV 文件
+void FaceLogin::on_actionCreate_CSV_triggered()
+{
+    if(Dir::GetDir().CreateCSV())
+        QMessageBox::information(this, tr("成功"), tr("生成CSV文件成功！"));
+    else
+        QMessageBox::warning(this, tr("失败"), tr("生成CSV文件失败！"));
+}

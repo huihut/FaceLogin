@@ -70,6 +70,9 @@ private slots:
     // Train
     void on_actionStart_Train_triggered();
 
+    // Dataset
+    void on_actionCreate_CSV_triggered();
+
 private:
     enum LoginState
     {

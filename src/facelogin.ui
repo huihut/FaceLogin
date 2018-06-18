@@ -222,9 +222,16 @@
     </property>
     <addaction name="actionStart_Train"/>
    </widget>
+   <widget class="QMenu" name="menuDataset">
+    <property name="title">
+     <string>Dataset</string>
+    </property>
+    <addaction name="actionCreate_CSV"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuDevices"/>
    <addaction name="menutrain"/>
+   <addaction name="menuDataset"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionStartCamera">
@@ -250,6 +257,11 @@
   <action name="actionStart_Train">
    <property name="text">
     <string>Start Train</string>
+   </property>
+  </action>
+  <action name="actionCreate_CSV">
+   <property name="text">
+    <string>Create CSV</string>
    </property>
   </action>
  </widget>

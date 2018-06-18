@@ -10,6 +10,7 @@
 #define SRC "src"
 #define MODEL "model"
 #define CSV_FILENAME "dataset_csv.txt"
+#define SEPARATOR ';'
 
 // 文件路径操作类（单例模式）
 // 不实现复制构造函数和赋值函数，禁止手动构造、析构、复制、赋值

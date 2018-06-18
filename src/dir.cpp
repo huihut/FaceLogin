@@ -96,7 +96,7 @@ bool Dir::CreateCSV()
 {
     QString datasetdir(GetDatasetDir());
     QString datasetPath, datasetName;
-    char separator = ',';
+    const char separator = SEPARATOR;
 
     // 文件迭代器：获取指定类型的数据集文件
     QDirIterator it(datasetdir, QStringList() << "*.pgm" << "*.png" << "*.jpg", QDir::Files, QDirIterator::Subdirectories);
