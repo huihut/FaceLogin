@@ -36,6 +36,25 @@ cv::Mat ImageProcessing::QImage2cvMat(QImage image)
     return mat;
 }
 
+// 图片归一化
+Mat ImageProcessing::norm_0_255(InputArray _src) {
+    Mat src = _src.getMat();
+    // 创建和返回一个归一化后的图像矩阵:
+    Mat dst;
+    switch (src.channels()) {
+    case 1:
+        cv::normalize(_src, dst, 0, 255, NORM_MINMAX, CV_8UC1);
+        break;
+    case 3:
+        cv::normalize(_src, dst, 0, 255, NORM_MINMAX, CV_8UC3);
+        break;
+    default:
+        src.copyTo(dst);
+        break;
+    }
+    return dst;
+}
+
 // 图片切割和保存；
 // 传入：图片、用户名、图片名id、保存路径的引用；
 // 返回：检测到几个人脸；

@@ -67,6 +67,12 @@ private slots:
     void displayRegisterCaptureError(int id, const QCameraImageCapture::Error error, const QString &errorString);
     void registerCancelButtonClick();
 
+    // Train
+    void on_actionStart_Train_triggered();
+
+    // Dataset
+    void on_actionCreate_CSV_triggered();
+
 private:
     enum LoginState
     {
@@ -84,10 +90,15 @@ private:
     QActionGroup *videoDevicesGroup;
     QString registerUserName;       // 注册的用户名
     QString userImagePath;          // 用户注册时拍摄照片的存储路径
+
+    Train *train;                   // 训练
+
     bool applicationExiting;        // 应用退出
     bool canRecognition;            // 拍摄的照片是否可以识别出一个人脸
     const unsigned int entryTimes;  // 录入人脸数据次数（录入时拍多少张照）
     unsigned int entryTimesNow;     // 当前录入人脸数据次数
+
+
 };
 
 #endif // LOGIN_H

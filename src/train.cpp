@@ -7,5 +7,88 @@ Train::Train()
 
 void Train::run()
 {
+    vector<Mat> images;
+    vector<string> labels;
+    string fn_csv = Dir::GetDir().GetCSVPathName().toStdString();
 
+    try{
+        read_csv(fn_csv, images, labels, SEPARATOR);
+    }
+    catch (cv::Exception& e)
+    {
+        std::cerr << "Error opening file \"" << fn_csv << "\". Reason: " << e.msg << std::endl;
+        exit(1);
+    }
+
+    if (images.size() <= 1) {
+        string error_message = "This demo needs at least 2 images to work. Please add more images to your data set!";
+        CV_Error(CV_StsError, error_message);
+    }
+
+    // 下面的几行代码仅仅是从你的数据集中移除最后一张图片
+    //[gm:自然这里需要根据自己的需要修改，他这里简化了很多问题]
+    Mat testSample = images[images.size() - 1];
+    string testLabel = labels[labels.size() - 1];
+    images.pop_back();
+    labels.pop_back();
+    // 下面几行创建了一个特征脸模型用于人脸识别，
+    // 通过CSV文件读取的图像和标签训练它。
+    // T这里是一个完整的PCA变换
+    //如果你只想保留10个主成分，使用如下代码
+    //      cv::createEigenFaceRecognizer(10);
+    //
+    // 如果你还希望使用置信度阈值来初始化，使用以下语句：
+    //      cv::createEigenFaceRecognizer(10, 123.0);
+    //
+    // 如果你使用所有特征并且使用一个阈值，使用以下语句：
+    //      cv::createEigenFaceRecognizer(0, 123.0);
+
+    string stdModelDir = Dir::GetDir().GetModelDir().toStdString() + QDir::toNativeSeparators("/").toStdString();
+
+    Ptr<FaceRecognizer> model = createEigenFaceRecognizer();
+    model->train(images, labels);
+    model->save(stdModelDir  + "FaceLoginPCAModel.xml");
+
+    Ptr<FaceRecognizer> model1 = createFisherFaceRecognizer();
+    model1->train(images, labels);
+    model1->save(stdModelDir  + "FaceLoginFisherModel.xml");
+
+    Ptr<FaceRecognizer> model2 = createLBPHFaceRecognizer();
+    model2->train(images, labels);
+    model2->save(stdModelDir  + "FaceLoginLBPHModel.xml");
+
+    // 下面对测试图像进行预测，predictedLabel是预测标签结果
+    int predictedLabel = model->predict(testSample);
+    int predictedLabel1 = model1->predict(testSample);
+    int predictedLabel2 = model2->predict(testSample);
+
+    // 还有一种调用方式，可以获取结果同时得到阈值:
+    //      int predictedLabel = -1;
+    //      double confidence = 0.0;
+    //      model->predict(testSample, predictedLabel, confidence);
+
+    cout << "Predicted class = " + to_string(predictedLabel) + "  / Actual class =" +  testLabel << endl;
+    cout << "Predicted class = " + to_string(predictedLabel1) + "  / Actual class =" +  testLabel << endl;
+    cout << "Predicted class = " + to_string(predictedLabel2) + "  / Actual class =" +  testLabel << endl;
+}
+
+// 使用CSV文件去读图像和标签，主要使用 stringstream 和 getline 方法
+void Train::read_csv(const string& filename, vector<Mat>& images, vector<string>& labels, char separator = ',')
+{
+    std::ifstream file(filename.c_str(), ifstream::in);
+    if (!file) {
+        string error_message = "No valid input file was given, please check the given filename.";
+        CV_Error(CV_StsBadArg, error_message);
+    }
+    string line, path, classlabel;
+    while (getline(file, line)) {
+        stringstream liness(line);
+        getline(liness, path, separator);
+        getline(liness, classlabel);
+        if (!path.empty() && !classlabel.empty()) {
+            images.push_back(imread(path, 0));
+//            labels.push_back(atoi(classlabel.c_str()));
+            labels.push_back(classlabel);
+        }
+    }
 }

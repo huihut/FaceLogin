@@ -22,11 +22,12 @@ class ImageProcessing
 public:
     ImageProcessing();
     Mat QImage2cvMat(QImage image);
+    Mat norm_0_255(InputArray _src);
     int ImageCutAndSave(QImage qimg, QString userName, int id, QString &imgPath);
 
 private:
-    int faceWidth;
-    int faceHeight;
+    const int faceWidth;
+    const int faceHeight;
     const std::string lbpcascade_frontalface;
     QString newUserName;
 };

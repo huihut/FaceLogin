@@ -12,7 +12,6 @@ SOURCES += \
     train.cpp \
     recognize.cpp \
     facelogin.cpp \
-    entry.cpp \
     dir.cpp \
     imageprocessing.cpp
 
@@ -20,7 +19,6 @@ HEADERS += \
     train.h \
     recognize.h \
     facelogin.h \
-    entry.h \
     dir.h \
     imageprocessing.h
 
@@ -45,11 +43,15 @@ macx {
 # opencv
 INCLUDEPATH += /usr/local/Cellar/opencv/2.4.13.2/include
 LIBS += -L/usr/local/Cellar/opencv/2.4.13.2/lib \
+#    -lopencv_calib3d \
+    -lopencv_contrib \
     -lopencv_core \
-#    -lopencv_features2d \
+    -lopencv_features2d \
+#    -lopencv_flann \
     -lopencv_highgui \
     -lopencv_imgproc \
-#    -lopencv_imgcodecs \
+#    -lopencv_ml \
+#    -lopencv_photo \
     -lopencv_objdetect
 }
 

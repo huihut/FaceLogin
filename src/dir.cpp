@@ -1,11 +1,12 @@
 #include "dir.h"
 
-Dir::Dir()
+Dir::Dir() :
+    programRootDir(ProgramRootDir()),
+    srcDir(SrcDir()),
+    datasetDir(DatasetDir()),
+    modelDir(ModelDir()),
+    csvPathName(GetDatasetDir() + QDir::toNativeSeparators("/") + CSV_FILENAME)
 {
-    programRootDir = ProgramRootDir();
-    srcDir = SrcDir();
-    datasetDir = DatasetDir();
-    modelDir = ModelDir();
 }
 
 Dir::~Dir()
@@ -15,7 +16,7 @@ Dir::~Dir()
 
 // -------- 获取文件路径 --------
 
-QDir Dir::ProgramRootDir()
+QDir Dir::ProgramRootDir() const
 {
     QDir dir(QApplication::applicationDirPath());
 
@@ -37,57 +38,55 @@ QDir Dir::ProgramRootDir()
     return dir;
 }
 
-QString Dir::SrcDir()
+QString Dir::SrcDir() const
 {
     QDir dir = GetProgramRootDir();
     dir.cd(SRC);
     return dir.absolutePath();
 }
 
-QString Dir::DatasetDir()
+QString Dir::DatasetDir() const
 {
     QDir dir = GetProgramRootDir();
     dir.cd(DATASET);
     return dir.absolutePath();
 }
 
-QString Dir::ModelDir()
+QString Dir::ModelDir() const
 {
     QDir dir = GetProgramRootDir();
     dir.cd(MODEL);
     return dir.absolutePath();
 }
 
+QString Dir::CSVPathName() const
+{
+    return GetDatasetDir() + QDir::toNativeSeparators("/") + CSV_FILENAME;
+}
+
 // -------- 返回文件路径 --------
 
-QDir Dir::GetProgramRootDir()
+QDir Dir::GetProgramRootDir() const
 {
-    if(programRootDir.exists())
-        return programRootDir;
-    programRootDir =  ProgramRootDir();
     return programRootDir;
 }
-QString Dir::GetSrcDir()
+QString Dir::GetSrcDir() const
 {
-    if(!srcDir.isEmpty())
-        return srcDir;
-    srcDir =  SrcDir();
     return srcDir;
 }
-QString Dir::GetDatasetDir()
+QString Dir::GetDatasetDir() const
 {
-    if(!datasetDir.isEmpty())
-        return datasetDir;
-    datasetDir =  DatasetDir();
     return datasetDir;
 }
 
-QString Dir::GetModelDir()
+QString Dir::GetModelDir() const
 {
-    if(!modelDir.isEmpty())
-        return modelDir;
-    modelDir =  ModelDir();
     return modelDir;
+}
+
+QString Dir::GetCSVPathName() const
+{
+    return csvPathName;
 }
 
 // -------- 生成 CSV 文件 --------
@@ -97,7 +96,7 @@ bool Dir::CreateCSV()
 {
     QString datasetdir(GetDatasetDir());
     QString datasetPath, datasetName;
-    char separator = ',';
+    const char separator = SEPARATOR;
 
     // 文件迭代器：获取指定类型的数据集文件
     QDirIterator it(datasetdir, QStringList() << "*.pgm" << "*.png" << "*.jpg", QDir::Files, QDirIterator::Subdirectories);
@@ -108,7 +107,7 @@ bool Dir::CreateCSV()
     }
 
     // 创建及打开 CSV 文件
-    QFile file(datasetdir + QDir::toNativeSeparators("/") + CSV_FILENAME);
+    QFile file(GetCSVPathName());
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         qDebug() << "Can't open CSV file!\n";
