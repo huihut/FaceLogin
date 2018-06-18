@@ -12,7 +12,7 @@ void Train::run()
     string fn_csv = Dir::GetDir().GetCSVPathName().toStdString();
 
     try{
-        read_csv(fn_csv, images, labels, ',');
+        read_csv(fn_csv, images, labels, SEPARATOR);
     }
     catch (cv::Exception& e)
     {

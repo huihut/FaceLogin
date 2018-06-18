@@ -63,7 +63,8 @@ FaceLogin::~FaceLogin()
     delete loginImageCapture;
     delete registerImageCapture;
     delete camera;
-    delete train;
+    if(train)
+        delete train;
     delete ui;
 }
 

@@ -9,6 +9,8 @@
 #include <opencv2/opencv.hpp>
 #include "dir.h"
 
+#define SEPARATOR ';'
+
 using namespace cv;
 using namespace std;
 
